@@ -14,6 +14,7 @@ final class PluginBuildScript
 		private string $pluginType,
 		private string $repositoryName,
 		private string $rootPath,
+		private string $buildDir,
 		private string $updateName,
 		private string $updateDescription,
 		private string $joomlaRegex,
@@ -30,7 +31,7 @@ final class PluginBuildScript
 		$this->version = (string) $xml->version;
 
 		$this->repositoryUrl = 'https://github.com/' . $this->maintainer . '/' . $this->repositoryName;
-		$this->zipFile = __DIR__ . '/packages/' . $this->pluginName . '-' . $this->version . '.zip';
+		$this->zipFile = $this->buildDir . '/packages/' . $this->pluginName . '-' . $this->version . '.zip';
 	}
 
 	public function build(): void
@@ -42,9 +43,9 @@ final class PluginBuildScript
 
 	private function buildZip(): void
 	{
-		if (!is_dir(__DIR__ . '/packages'))
+		if (!is_dir($this->buildDir . '/packages'))
 		{
-			mkdir(__DIR__ . '/packages', 0755);
+			mkdir($this->buildDir . '/packages', 0755);
 		}
 
 		$zip = new ZipArchive;
