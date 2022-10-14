@@ -15,11 +15,11 @@ final class PluginBuildScript
 		private string $pluginElement,
 		private string $pluginType,
 		private string $repositoryName,
+		private string $maintainer,
 		private string $updateName,
 		private string $updateDescription,
 		private string $joomlaRegex,
 		private string $phpMinimum,
-		private string $maintainer,
 	)
 	{
 		$this->pluginName = 'plg_' . $this->pluginType . '_' . $this->pluginElement;
