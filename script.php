@@ -10,11 +10,11 @@ final class PluginBuildScript
 	private string $version;
 
 	public function __construct(
+		private string $rootPath,
+		private string $buildDirectory,
 		private string $pluginElement,
 		private string $pluginType,
 		private string $repositoryName,
-		private string $rootPath,
-		private string $buildDirectory,
 		private string $updateName,
 		private string $updateDescription,
 		private string $joomlaRegex,
