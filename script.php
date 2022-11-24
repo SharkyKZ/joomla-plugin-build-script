@@ -1,25 +1,25 @@
 <?php
 
-final class PluginBuildScript
+class PluginBuildScript
 {
-	private string $pluginDirectory;
-	private string $mediaDirectory;
-	private string $pluginName;
-	private string $repositoryUrl;
-	private string $zipFile;
-	private string $version;
+	protected string $pluginDirectory;
+	protected string $mediaDirectory;
+	protected string $pluginName;
+	protected string $repositoryUrl;
+	protected string $zipFile;
+	protected string $version;
 
 	public function __construct(
-		private string $rootPath,
-		private string $buildDirectory,
-		private string $pluginElement,
-		private string $pluginType,
-		private string $repositoryName,
-		private string $maintainer,
-		private string $updateName,
-		private string $updateDescription,
-		private string $joomlaRegex,
-		private string $phpMinimum,
+		protected string $rootPath,
+		protected string $buildDirectory,
+		protected string $pluginElement,
+		protected string $pluginType,
+		protected string $repositoryName,
+		protected string $maintainer,
+		protected string $updateName,
+		protected string $updateDescription,
+		protected string $joomlaRegex,
+		protected string $phpMinimum,
 	)
 	{
 		$this->pluginName = 'plg_' . $this->pluginType . '_' . $this->pluginElement;
@@ -41,7 +41,7 @@ final class PluginBuildScript
 		$this->updateChangelogXml();
 	}
 
-	private function buildZip(): void
+	protected function buildZip(): void
 	{
 		if (!is_dir($this->buildDirectory . '/packages'))
 		{
@@ -90,7 +90,7 @@ final class PluginBuildScript
 		$zip->close();
 	}
 
-	private function updateUpdateXml(): void
+	protected function updateUpdateXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/updates.xml';
 		$xml = simplexml_load_file($manifestFile);
@@ -143,7 +143,7 @@ final class PluginBuildScript
 		file_put_contents($manifestFile, $this->formatXml($xml->asXml()));
 	}
 
-	private function updateChangelogXml(): void
+	protected function updateChangelogXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/changelog.xml';
 		$xml = simplexml_load_file($manifestFile);
@@ -164,7 +164,7 @@ final class PluginBuildScript
 		file_put_contents($manifestFile, $this->formatXml($xml->asXml()));
 	}
 
-	private function formatXml(string $xml): string
+	protected function formatXml(string $xml): string
 	{
 		$dom = new DOMDocument('1.0', 'UTF-8');
 		$dom->preserveWhiteSpace = false;
