@@ -2,6 +2,8 @@
 
 namespace Sharky\Joomla\PluginBuildScript;
 
+use SimpleXMLElement;
+
 class Script
 {
 	protected string $pluginDirectory;
@@ -95,7 +97,16 @@ class Script
 	protected function updateUpdateXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/updates.xml';
-		$xml = simplexml_load_file($manifestFile);
+
+		if (is_file($manifestFile))
+		{
+			$xml = simplexml_load_file($manifestFile);
+		}
+		else
+		{
+			$xml = new SimpleXMLElement('<updates/>');
+		}
+
 		$children = $xml->xpath('update');
 
 		foreach ($children as $key => $update)
@@ -142,13 +153,26 @@ class Script
 		$node->addAttribute('version', $this->joomlaRegex);
 		$update->addChild('php_minimum', $this->phpMinimum);
 
+		if (!is_dir(dirname($manifestFile)))
+		{
+			mkdir(dirname($manifestFile), 0777, true);
+		}
+
 		file_put_contents($manifestFile, $this->formatXml($xml->asXml()));
 	}
 
 	protected function updateChangelogXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/changelog.xml';
-		$xml = simplexml_load_file($manifestFile);
+
+		if (is_file($manifestFile))
+		{
+			$xml = simplexml_load_file($manifestFile);
+		}
+		else
+		{
+			$xml = new SimpleXMLElement('<changelogs/>');
+		}
 
 		foreach ($xml->children() as $update)
 		{
@@ -162,6 +186,11 @@ class Script
 		$changelog->addChild('element', $this->pluginElement);
 		$changelog->addChild('type', 'plugin');
 		$changelog->addChild('version', $this->version);
+
+		if (!is_dir(dirname($manifestFile)))
+		{
+			mkdir(dirname($manifestFile), 0777, true);
+		}
 
 		file_put_contents($manifestFile, $this->formatXml($xml->asXml()));
 	}
