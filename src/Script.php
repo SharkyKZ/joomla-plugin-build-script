@@ -95,15 +95,7 @@ class Script
 	protected function updateUpdateXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/updates.xml';
-
-		if (is_file($manifestFile))
-		{
-			$xml = simplexml_load_file($manifestFile);
-		}
-		else
-		{
-			$xml = new \SimpleXMLElement('<updates/>');
-		}
+		$xml = is_file($manifestFile) ? simplexml_load_file($manifestFile) : new \SimpleXMLElement('<updates/>');
 
 		$children = $xml->xpath('update');
 
@@ -162,15 +154,7 @@ class Script
 	protected function updateChangelogXml(): void
 	{
 		$manifestFile = $this->rootPath . '/updates/changelog.xml';
-
-		if (is_file($manifestFile))
-		{
-			$xml = simplexml_load_file($manifestFile);
-		}
-		else
-		{
-			$xml = new \SimpleXMLElement('<changelogs/>');
-		}
+		$xml = is_file($manifestFile) ? simplexml_load_file($manifestFile) : new \SimpleXMLElement('<changelogs/>');
 
 		foreach ($xml->children() as $update)
 		{
