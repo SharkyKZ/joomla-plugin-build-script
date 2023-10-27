@@ -1,0 +1,8 @@
+{
+	"name": "sharky/joomla-plugin-build-script",
+	"autoload": {
+		"psr-4": {
+			"Sharky\\Joomla\\PluginBuildScript": "src/"
+		}
+	}
+}

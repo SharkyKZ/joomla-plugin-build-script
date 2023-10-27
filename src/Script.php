@@ -1,6 +1,8 @@
 <?php
 
-class PluginBuildScript
+namespace Sharky\Joomla\PluginBuildScript;
+
+class Script
 {
 	protected string $pluginDirectory;
 	protected string $mediaDirectory;
