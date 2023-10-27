@@ -2,8 +2,6 @@
 
 namespace Sharky\Joomla\PluginBuildScript;
 
-use SimpleXMLElement;
-
 class Script
 {
 	protected string $pluginDirectory;
@@ -104,7 +102,7 @@ class Script
 		}
 		else
 		{
-			$xml = new SimpleXMLElement('<updates/>');
+			$xml = new \SimpleXMLElement('<updates/>');
 		}
 
 		$children = $xml->xpath('update');
@@ -171,7 +169,7 @@ class Script
 		}
 		else
 		{
-			$xml = new SimpleXMLElement('<changelogs/>');
+			$xml = new \SimpleXMLElement('<changelogs/>');
 		}
 
 		foreach ($xml->children() as $update)
