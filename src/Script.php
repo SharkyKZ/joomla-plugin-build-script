@@ -50,11 +50,11 @@ class Script
 			mkdir($this->buildDirectory . '/packages', 0755);
 		}
 
-		$zip = new ZipArchive;
-		$zip->open($this->zipFile, ZipArchive::OVERWRITE|ZipArchive::CREATE);
+		$zip = new \ZipArchive;
+		$zip->open($this->zipFile, \ZipArchive::OVERWRITE|\ZipArchive::CREATE);
 
-		$iterator = new RecursiveDirectoryIterator($this->pluginDirectory);
-		$iterator2 = new RecursiveIteratorIterator($iterator);
+		$iterator = new \RecursiveDirectoryIterator($this->pluginDirectory);
+		$iterator2 = new \RecursiveIteratorIterator($iterator);
 
 		foreach ($iterator2 as $file)
 		{
@@ -69,8 +69,8 @@ class Script
 
 		if (is_dir($this->mediaDirectory))
 		{
-			$iterator = new RecursiveDirectoryIterator($this->mediaDirectory);
-			$iterator2 = new RecursiveIteratorIterator($iterator);
+			$iterator = new \RecursiveDirectoryIterator($this->mediaDirectory);
+			$iterator2 = new \RecursiveIteratorIterator($iterator);
 
 			foreach ($iterator2 as $file)
 			{
@@ -168,7 +168,7 @@ class Script
 
 	protected function formatXml(string $xml): string
 	{
-		$dom = new DOMDocument('1.0', 'UTF-8');
+		$dom = new \DOMDocument('1.0', 'UTF-8');
 		$dom->preserveWhiteSpace = false;
 		$dom->formatOutput = true;
 		$dom->loadXml($xml);
