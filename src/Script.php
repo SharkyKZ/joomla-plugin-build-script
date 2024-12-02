@@ -9,7 +9,7 @@ class Script
 	protected string $pluginName;
 	protected string $repositoryUrl;
 	protected string $zipFile;
-	protected string $version;
+	protected string $manifestFile;
 
 	public function __construct(
 		protected string $rootPath,
@@ -22,15 +22,20 @@ class Script
 		protected string $updateDescription,
 		protected string $joomlaRegex,
 		protected string $phpMinimum,
+		protected ?string $version = null,
 	)
 	{
 		$this->pluginName = 'plg_' . $this->pluginType . '_' . $this->pluginElement;
 
 		$this->pluginDirectory = $this->rootPath . '/code/plugins/' . $this->pluginType . '/' . $this->pluginElement;
 		$this->mediaDirectory = $this->rootPath . '/code/media/' . $this->pluginName;
+		$this->manifestFile = $this->pluginDirectory . '/' . $this->pluginElement . '.xml';
 
-		$xml = simplexml_load_file($this->pluginDirectory . '/' . $this->pluginElement . '.xml');
-		$this->version = (string) $xml->version;
+		if ($this->version === null)
+		{
+			$xml = simplexml_load_file($this->manifestFile);
+			$this->version = (string) $xml->version;
+		}
 
 		$this->repositoryUrl = 'https://github.com/' . $this->maintainer . '/' . $this->repositoryName;
 		$this->zipFile = $this->buildDirectory . '/packages/' . $this->pluginName . '-' . $this->version . '.zip';
@@ -38,9 +43,21 @@ class Script
 
 	public function build(): void
 	{
+		$this->updateManifest();
 		$this->buildZip();
 		$this->updateUpdateXml();
 		$this->updateChangelogXml();
+	}
+
+	protected function updateManifest(): void
+	{
+		$xml = file_get_contents($this->manifestFile);
+		$xml = preg_replace(
+			['/<version>.+<\/version>/', '/<creationDate>.+<\/creationDate>/'],
+			['<version>' . $this->version . '</version>', '<creationDate>' . date('Y-m-d') . '</creationDate>'],
+			$xml
+		);
+		file_put_contents($this->manifestFile, $xml);
 	}
 
 	protected function buildZip(): void
@@ -99,7 +116,7 @@ class Script
 
 		$children = $xml->xpath('update');
 
-		foreach ($children as $key => $update)
+		foreach ($children as $update)
 		{
 			if (
 				(string) $update->version === $this->version
@@ -135,7 +152,10 @@ class Script
 
 		$node = $update->addChild('infourl', $this->repositoryUrl . '/releases/tag/' . $this->version);
 		$node->addAttribute('title', $this->updateName);
-		$update->addChild('changelogurl', 'https://raw.githubusercontent.com/' . $this->maintainer . '/' . $this->repositoryName . '/master/updates/changelog.xml');
+		$update->addChild(
+			'changelogurl',
+			'https://raw.githubusercontent.com/' . $this->maintainer . '/' . $this->repositoryName . '/master/updates/changelog.xml'
+		);
 
 		// System requirements.
 		$node = $update->addChild('targetplatform');
