@@ -51,12 +51,20 @@ class Script
 
 	protected function updateManifest(): void
 	{
+		$xml = simplexml_load_file($this->manifestFile);
+
+		if ((string) $xml->xpath('version')[0] === $this->version)
+		{
+			return;
+		}
+
 		$xml = file_get_contents($this->manifestFile);
 		$xml = preg_replace(
 			['/<version>.+<\/version>/', '/<creationDate>.+<\/creationDate>/'],
 			['<version>' . $this->version . '</version>', '<creationDate>' . date('Y-m-d') . '</creationDate>'],
 			$xml
 		);
+
 		file_put_contents($this->manifestFile, $xml);
 	}
 
